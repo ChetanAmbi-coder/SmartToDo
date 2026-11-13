@@ -18,13 +18,19 @@ public class DatabaseManager {
 
     public static synchronized DatabaseManager getInstance() {
         if (instance == null) {
-            String dbDir = System.getProperty("user.home") + File.separator + ".smarttodo";
-            File dir = new File(dbDir);
-            if (!dir.exists()) {
-                dir.mkdirs();
+            String customPath = System.getProperty("smarttodo.db.path");
+            if (customPath != null && !customPath.isBlank()) {
+                instance = new DatabaseManager("jdbc:sqlite:" + customPath);
+                return instance;
             }
-            String defaultPath = dbDir + File.separator + "smarttodo.db";
-            instance = new DatabaseManager("jdbc:sqlite:" + defaultPath);
+
+            // Local project data directory (guaranteed read/write access and portability)
+            File dataDir = new File("data");
+            if (!dataDir.exists()) {
+                dataDir.mkdirs();
+            }
+            File localDb = new File(dataDir, "smarttodo.db");
+            instance = new DatabaseManager("jdbc:sqlite:" + localDb.getAbsolutePath());
         }
         return instance;
     }

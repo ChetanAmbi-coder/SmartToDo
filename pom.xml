@@ -115,6 +115,9 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>com.smarttodo.Main</mainClass>
+                    <options>
+                        <option>-Djavafx.cachedir=${project.basedir}/target/javafx-cache</option>
+                    </options>
                 </configuration>
             </plugin>
 
